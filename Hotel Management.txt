@@ -1,0 +1,115 @@
+// Enum classes for AccountType, AccountStatus, RoomStyle, RoomStatus, BookingStatus
+enum AccountType {
+    GUEST, RECEPTIONIST
+}
+
+enum AccountStatus {
+    ACTIVE, BLOCKED, INACTIVE
+}
+
+enum RoomStyle {
+    STANDARD, DELUXE, SUITE
+}
+
+enum RoomStatus {
+    AVAILABLE, BOOKED, UNDER_MAINTENANCE
+}
+
+enum BookingStatus {
+    CONFIRMED, CANCELLED, COMPLETED
+}
+
+// Base Person class
+class Person {
+    String name;
+    String address;
+    String email;
+    String phone;
+    AccountType accountType;
+}
+
+// Account class
+class Account {
+    int id;
+    String password;
+    AccountStatus status;
+
+    void resetPassword(String newPassword) {
+        this.password = newPassword;
+    }
+}
+
+// Hotel class
+class Hotel {
+    String name;
+    String location;
+    List<Room> rooms;
+
+    List<Room> getRooms() {
+        return rooms;
+    }
+}
+
+// Room class
+class Room {
+    String roomNumber;
+    RoomStyle style;
+    RoomStatus status;
+    double bookingPrice;
+
+    boolean isRoomAvailable() {
+        return status == RoomStatus.AVAILABLE;
+    }
+}
+
+// Guest class
+class Guest extends Person {
+    int totalRoomsBooked;
+
+    RoomBooking createBooking(Room room, Date startDate, int durationDays) {
+        RoomBooking booking = new RoomBooking();
+        booking.reservationNumber = "RES" + System.currentTimeMillis();
+        booking.startDate = startDate;
+        booking.durationDays = durationDays;
+        booking.status = BookingStatus.CONFIRMED;
+        booking.room = room;
+        booking.endTime = new Date(startDate.getTime() + durationDays * 86400000L);
+        totalRoomsBooked++;
+        return booking;
+    }
+}
+
+// Receptionist class
+class Receptionist extends Person {
+    RoomBooking createBooking(Room room, Date startDate, int durationDays) {
+        RoomBooking booking = new RoomBooking();
+        booking.reservationNumber = "RES" + System.currentTimeMillis();
+        booking.startDate = startDate;
+        booking.durationDays = durationDays;
+        booking.status = BookingStatus.CONFIRMED;
+        booking.room = room;
+        booking.endTime = new Date(startDate.getTime() + durationDays * 86400000L);
+        return booking;
+    }
+}
+
+// RoomBooking class
+class RoomBooking {
+    String reservationNumber;
+    Date startDate;
+    int durationDays;
+    BookingStatus status;
+    Date endTime;
+    Room room;
+}
+
+// Notification class
+class Notification {
+    int notificationId;
+    Date createdOn;
+    String content;
+
+    void send() {
+        System.out.println("Sending Notification: " + content);
+    }
+}
